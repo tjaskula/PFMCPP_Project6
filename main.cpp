@@ -117,10 +117,10 @@ int main()
     T eleven(11, "eleven");                                             //6
     
     ValueComparator f;                                            //7
-    auto* smaller = f.compare(&ten, &eleven);                             //8
+    auto* smaller = f.compare(ten, eleven);                             //8
     if (smaller == nullptr)
     {
-        std::cout << "the compre function returned nullptr because one or both arguments are null, or both arguments have the same value." << std::endl;
+        std::cout << "the compre function returned nullptr because both arguments have the same value." << std::endl;
     }
     else
     {
@@ -128,9 +128,9 @@ int main()
     }
     
     U updatable1;
-    float updatedValue = 5.f;
-    std::cout << "[static func] updatable1's multiplied values: " << ValueUpdater::update(&updatable1, &updatedValue) << std::endl;                  //11
+    const float updatedValue = 5.f;
+    std::cout << "[static func] updatable1's multiplied values: " << ValueUpdater::update(updatable1, updatedValue) << std::endl;                  //11
     
     U updatable2;
-    std::cout << "[member func] updatable2's multiplied values: " << updatable2.update( &updatedValue ) << std::endl;
+    std::cout << "[member func] updatable2's multiplied values: " << updatable2.update( updatedValue ) << std::endl;
 }
