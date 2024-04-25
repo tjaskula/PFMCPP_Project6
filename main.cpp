@@ -56,48 +56,86 @@ Purpose:  This project will show you the difference between member functions and
 
 #include <iostream>
 #include <string>
+
 struct T
 {
-    T(<#type name#> v, const char* <#variable name#>)   //1
-    //2
-    //3
+    int value;
+    std::string name;
+    T(int v, const char* uname) //1
+    {
+        value = v; //2
+        name = uname; //3
+    }
 };
 
-struct <#structName1#>                                //4
+struct ValueComparator                                //4
 {
-    <#type name#> compare(<#type name#> a, <#type name#> b) //5
+    T* compare(T* a, T* b) //5
     {
-        if( a->value < b->value ) return a;
-        if( a->value > b->value ) return b;
+        if (a != nullptr && b != nullptr)
+        {
+            if( a->value < b->value ) return a;
+            if( a->value > b->value ) return b;
+        }
+        
         return nullptr;
     }
 };
 
 struct U
 {
-    float <#name1#> { 0 }, <#name2#> { 0 };
-    <#returnType#> <#memberFunction#>(<#type name#>* <#updatedValue#>)      //12
+    float value1 { 200.0f }, value2 { 714.0f };
+    float update(float* updatedValue)      //12
     {
-        
+        if (updatedValue != nullptr)
+        {
+            std::cout << "U's value1 value: " << value1 << std::endl;
+            value1 = *updatedValue;
+            std::cout << "U's value1 updated value: " << value1 << std::endl;
+            while( std::abs(value2 - value1) > 0.001f )
+            {
+                if (value2 > value1)
+                {
+                    value2 -= (value2 - value1) / 2.0f;  // Move halfway closer to value1
+                }
+                else
+                {
+                    value2 += (value1 - value2) / 2.0f;  // Move halfway closer to value1
+                }
+            }
+            std::cout << "U's value2 updated value: " << value2 << std::endl;
+            return value2 * value1;
+        }
+
+        return 0.0f;
     }
 };
 
-struct <#structname2#>
+struct ValueUpdater
 {
-    static <#returntype#> <#staticFunctionA#>(U* that, <#type name#>* <#updatedValue#> )        //10
+    static float update(U* that, float* updatedValue)        //10
     {
-        std::cout << "U's <#name1#> value: " << that-><#name1#> << std::endl;
-        that-><#name1#> = <#updatedValue#>;
-        std::cout << "U's <#name1#> updated value: " << that-><#name1#> << std::endl;
-        while( std::abs(that-><#name2#> - that-><#name1#>) > 0.001f )
+        if (that != nullptr && updatedValue != nullptr)
         {
-            /*
-             write something that makes the distance between that-><#name2#> and that-><#name1#> get smaller
-             */
-            that-><#name2#> += ;
+            std::cout << "U's value1 value: " << that->value1 << std::endl;
+            that->value1 = *updatedValue;
+            std::cout << "U's value1 updated value: " << that->value1 << std::endl;
+            while( std::abs(that->value2 - that->value1) > 0.001f )
+            {
+                if (that->value2 > that->value1)
+                {
+                    that->value2 -= (that->value2 - that->value1) / 2.0f;  // Move halfway closer to value1
+                }
+                else
+                {
+                    that->value2 += (that->value1 - that->value2) / 2.0f;  // Move halfway closer to value1
+                }
+            }
+            std::cout << "U's value2 updated value: " << that->value2 << std::endl;
+            return that->value2 * that->value1;
         }
-        std::cout << "U's <#name2#> updated value: " << that-><#name2#> << std::endl;
-        return that-><#name2#> * that-><#name1#>;
+
+        return 0.0f;   
     }
 };
         
@@ -117,17 +155,24 @@ struct <#structname2#>
 
 int main()
 {
-    T <#name1#>( , );                                             //6
-    T <#name2#>( , );                                             //6
+    T ten(10 , "ten");                                             //6
+    T eleven(11, "eleven");                                             //6
     
-    <#structName1#> f;                                            //7
-    auto* smaller = f.compare( , );                              //8
-    std::cout << "the smaller one is << " << smaller->name << std::endl; //9
+    ValueComparator f;                                            //7
+    auto* smaller = f.compare(&ten, &eleven);                             //8
+    if (smaller == nullptr)
+    {
+        std::cout << "the compre function returned nullptr because one or both arguments are null, or both arguments have the same value." << std::endl;
+    }
+    else
+    {
+        std::cout << "the smaller one is " << smaller->name << std::endl; //9
+    }
     
-    U <#name3#>;
+    U updatable1;
     float updatedValue = 5.f;
-    std::cout << "[static func] <#name3#>'s multiplied values: " << <#structname2#>::<#staticFunctionA#>( , ) << std::endl;                  //11
+    std::cout << "[static func] updatable1's multiplied values: " << ValueUpdater::update(&updatable1, &updatedValue) << std::endl;                  //11
     
-    U <#name4#>;
-    std::cout << "[member func] <#name4#>'s multiplied values: " << <#name4#>.<#memberFunction#>( &updatedValue ) << std::endl;
+    U updatable2;
+    std::cout << "[member func] updatable2's multiplied values: " << updatable2.update( &updatedValue ) << std::endl;
 }
