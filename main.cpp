@@ -41,14 +41,11 @@ struct T
 
 struct ValueComparator                                //4
 {
-    T* compare(T* a, T* b) //5
+    T* compare(T& a, T& b) //5
     {
-        if (a != nullptr && b != nullptr)
-        {
-            if( a->value < b->value ) return a;
-            if( a->value > b->value ) return b;
-        }
-        
+        if( a.value < b.value ) return &a;
+        if( a.value > b.value ) return &b;
+
         return nullptr;
     }
 };
@@ -56,57 +53,47 @@ struct ValueComparator                                //4
 struct U
 {
     float value1 { 200.0f }, value2 { 714.0f };
-    float update(float* updatedValue)      //12
+    float update(const float& updatedValue)      //12
     {
-        if (updatedValue != nullptr)
+        std::cout << "U's value1 value: " << value1 << std::endl;
+        value1 = updatedValue;
+        std::cout << "U's value1 updated value: " << value1 << std::endl;
+        while( std::abs(value2 - value1) > 0.001f )
         {
-            std::cout << "U's value1 value: " << value1 << std::endl;
-            value1 = *updatedValue;
-            std::cout << "U's value1 updated value: " << value1 << std::endl;
-            while( std::abs(value2 - value1) > 0.001f )
+            if (value2 > value1)
             {
-                if (value2 > value1)
-                {
-                    value2 -= (value2 - value1) / 2.0f;  // Move halfway closer to value1
-                }
-                else
-                {
-                    value2 += (value1 - value2) / 2.0f;  // Move halfway closer to value1
-                }
+                value2 -= (value2 - value1) / 2.0f;  // Move halfway closer to value1
             }
-            std::cout << "U's value2 updated value: " << value2 << std::endl;
-            return value2 * value1;
+            else
+            {
+                value2 += (value1 - value2) / 2.0f;  // Move halfway closer to value1
+            }
         }
-
-        return 0.0f;
+        std::cout << "U's value2 updated value: " << value2 << std::endl;
+        return value2 * value1;
     }
 };
 
 struct ValueUpdater
 {
-    static float update(U* that, float* updatedValue)        //10
+    static float update(U& that, const float& updatedValue)        //10
     {
-        if (that != nullptr && updatedValue != nullptr)
+        std::cout << "U's value1 value: " << that.value1 << std::endl;
+        that.value1 = updatedValue;
+        std::cout << "U's value1 updated value: " << that.value1 << std::endl;
+        while( std::abs(that.value2 - that.value1) > 0.001f )
         {
-            std::cout << "U's value1 value: " << that->value1 << std::endl;
-            that->value1 = *updatedValue;
-            std::cout << "U's value1 updated value: " << that->value1 << std::endl;
-            while( std::abs(that->value2 - that->value1) > 0.001f )
+            if (that.value2 > that.value1)
             {
-                if (that->value2 > that->value1)
-                {
-                    that->value2 -= (that->value2 - that->value1) / 2.0f;  // Move halfway closer to value1
-                }
-                else
-                {
-                    that->value2 += (that->value1 - that->value2) / 2.0f;  // Move halfway closer to value1
-                }
+                that.value2 -= (that.value2 - that.value1) / 2.0f;  // Move halfway closer to value1
             }
-            std::cout << "U's value2 updated value: " << that->value2 << std::endl;
-            return that->value2 * that->value1;
+            else
+            {
+                that.value2 += (that.value1 - that.value2) / 2.0f;  // Move halfway closer to value1
+            }
         }
-
-        return 0.0f;   
+        std::cout << "U's value2 updated value: " << that.value2 << std::endl;
+        return that.value2 * that.value1; 
     }
 };
         
