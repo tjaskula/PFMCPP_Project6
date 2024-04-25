@@ -159,8 +159,15 @@ int main()
     T eleven(11, "eleven");                                             //6
     
     ValueComparator f;                                            //7
-    auto* smaller = f.compare(&ten, &eleven);                              //8
-    std::cout << "the smaller one is " << (smaller == nullptr ? "nullptr because one or both arguments are null, or both arguments have the same value." : smaller->name) << std::endl; //9
+    auto* smaller = f.compare(&ten, &eleven);                             //8
+    if (smaller == nullptr)
+    {
+        std::cout << "the compre function returned nullptr because one or both arguments are null, or both arguments have the same value." << std::endl;
+    }
+    else
+    {
+        std::cout << "the smaller one is " << smaller->name << std::endl; //9
+    }
     
     U updatable1;
     float updatedValue = 5.f;
