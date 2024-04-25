@@ -56,7 +56,6 @@ Purpose:  This project will show you the difference between member functions and
 
 #include <iostream>
 #include <string>
-#include <memory>
 
 struct T
 {
@@ -160,8 +159,8 @@ int main()
     T eleven(11, "eleven");                                             //6
     
     ValueComparator f;                                            //7
-    auto smaller = std::unique_ptr<T>(f.compare(&ten, &eleven));                              //8
-    std::cout << "the smaller one is << " << (smaller == nullptr ? "nullptr because is comparing two equal types" : smaller->name) << std::endl; //9
+    auto* smaller = f.compare(&ten, &eleven);                              //8
+    std::cout << "the smaller one is << " << (smaller == nullptr ? "compare returned nullptr because one or both arguments are null, or both arguments have the same value." : smaller->name) << std::endl; //9
     
     U updatable1;
     float updatedValue = 5.f;
